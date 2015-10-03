@@ -1,0 +1,20 @@
+{
+  "elements": [
+    { "name": "Host", "type": "ValidationTextBox", "caption": "Host" },
+    { "name": "Zone", "type": "Select", "caption": "Zone", "options": [
+      { "label": "Main_Zone", "value": "Main_Zone" },
+      { "label": "Zone_2", "value": "Zone_2" },
+      { "label": "Zone_3", "value": "Zone_3" },
+      { "label": "Zone_4", "value": "Zone_4" }
+    ] },
+    { "name": "UpdateInterval", "type": "IntervalBox", "caption": "Sekunden" },
+
+  ],
+  "actions": [
+    { "type": "Button", "label": "Einschalten", "onClick": "YAVR_SetPower($id, true);" },
+    { "type": "Button", "label": "Standby", "onClick": "YAVR_SetPower($id, false);" },
+    { "type": "Button", "label": "Zeige Szenen", "onClick": "print_r(YAVR_ListScenes($id));" },
+    { "type": "Button", "label": "Zeige Inputs", "onClick": "print_r(YAVR_ListInputs($id));" },
+    { "type": "Button", "label": "Status abgleichen", "onClick": "print_r(YAVR_RequestData($id));" }
+  ]
+}

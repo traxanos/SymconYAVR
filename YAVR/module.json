@@ -1,0 +1,11 @@
+{
+  "id": "{2A6B232F-38C9-424D-9D9B-6C520DBD529B}",
+  "name": "YAVR",
+  "type": 3,
+  "vendor": "Yamaha",
+  "aliases": [ "Yamaha AVR" ],
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "YAVR"
+}
