@@ -130,12 +130,16 @@ class YAVR extends IPSModule {
          $this->SetPower($value);
          break;
       case 'SCENE':
-         $value = "Scene $value";
-         $this->SetScene($value);
+         if($value > 0) {
+           $value = "Scene $value";
+           $this->SetScene($value);
+         }
          break;
       case 'INPUT':
-         $value = $this->GetInputKey($value);
-         $this->SetInput($value);
+         if($value > 0) {
+           $value = $this->GetInputKey($value);
+           $this->SetInput($value);
+         }
          break;
       case 'MUTE':
          $value = $value == 1;
