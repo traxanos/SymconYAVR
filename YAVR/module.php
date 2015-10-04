@@ -127,7 +127,7 @@ class YAVR extends IPSModule {
     switch ($ident) {
       case 'STATE':
          $value = $value == 1;
-         $this->SetPower($value);
+         $this->SetState($value);
          break;
       case 'SCENE':
          if($value > 0) {
@@ -178,7 +178,6 @@ class YAVR extends IPSModule {
       IPS_SetEventCyclic($id, 0, 0, 0, 0, 1, $interval);
       IPS_SetEventActive($id, true);
     }
-
   }
 
   public function RequestData() {
@@ -227,7 +226,7 @@ class YAVR extends IPSModule {
     return GetValue($this->GetIDForIdent($key));
   }
 
-  public function SetPower($state) {
+  public function SetState($state) {
     SetValueBoolean($this->GetIDForIdent('STATE'), $state);
     $state = $state ? 'On' : 'Standby';
     return $this->Request("<Power_Control><Power>{$state}</Power></Power_Control>", 'PUT');
