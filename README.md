@@ -4,7 +4,7 @@ SymconYAVR ist eine Erweiterung für die Heimautomatisierung IP Symcon. Mithilfe
 
 ## Einrichtung
 
-Die Einrichtung erfolgt über Modulverwaltung von Symcon. Nach der Installation des Moduls sollte der Dienst neugestartet werden. Danach kann man pro Gerät eine Instanz vom Typ "Yamaha AVR" anlegen.
+Die Einrichtung erfolgt über die Modulverwaltung von Symcon. Nach der Installation des Moduls sollte der Dienst neugestartet werden. Danach kann man pro Gerät eine Instanz vom Typ "Yamaha AVR" anlegen.
 
 ## Einstellungen
 
