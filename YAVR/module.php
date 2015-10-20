@@ -20,6 +20,7 @@ class YAVR extends IPSModule {
     'AV7' => 17,
     'AV8' => 18,
     'AV9' => 10,
+    'AUDIO' => 20,
     'AUDIO1' => 21,
     'AUDIO2' => 22,
     'AUDIO3' => 23,
@@ -39,7 +40,10 @@ class YAVR extends IPSModule {
     'iPod (USB)' => 108,
     'TUNER' => 109,
     'PHONO' => 110,
-    'V-AUX' => 111
+    'V-AUX' => 111,
+    'Spotify' => 112,
+    'SERVER' => 113,
+    'AirPlay' => 114
   );
 
   public function Create() {
