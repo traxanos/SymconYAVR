@@ -43,7 +43,8 @@ class YAVR extends IPSModule {
     'V-AUX' => 111,
     'Spotify' => 112,
     'SERVER' => 113,
-    'AirPlay' => 114
+    'AirPlay' => 114,
+    'JUKE' => 115
   );
 
   public function Create() {
