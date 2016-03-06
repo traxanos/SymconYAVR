@@ -44,7 +44,8 @@ class YAVR extends IPSModule {
     'Spotify' => 112,
     'SERVER' => 113,
     'AirPlay' => 114,
-    'JUKE' => 115
+    'JUKE' => 115,
+    'MusicCast Link' => 116
   );
 
   public function Create() {
