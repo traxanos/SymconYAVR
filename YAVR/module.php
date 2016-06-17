@@ -84,7 +84,6 @@ class YAVR extends IPSModule {
     if(array_key_exists($id, $map)) {
       return $map[$id];
     } else {
-      print_r($map);
       throw new Exception("Invalid input id $id");
     }
   }
@@ -108,6 +107,7 @@ class YAVR extends IPSModule {
     $this->EnableAction("INPUT");
     IPS_SetIcon($inputId, 'ArrowRight');
 
+    $this->RequestData();
     $this->RegisterTimer('INTERVAL', $this->ReadPropertyInteger('UpdateInterval'), 'YAVR_RequestData($id)');
   }
 
