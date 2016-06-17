@@ -83,6 +83,7 @@ class YAVR extends IPSModule {
     if(array_key_exists($id, $map)) {
       return $map[$id];
     } else {
+      print_r($map);
       throw new Exception("Invalid input id $id");
     }
   }
@@ -187,7 +188,9 @@ class YAVR extends IPSModule {
   }
 
   public function RequestData() {
-    $data = $this->Request("<Basic_Status>GetParam</Basic_Status>", 'GET')->Basic_Status;
+    $data = $this->Request("<Basic_Status>GetParam</Basic_Status>", 'GET');
+    if($data === false) return false;
+    $data = $data->Basic_Status;
     $power = $data->Power_Control->Power == 'On';
     SetValueBoolean($this->GetIDForIdent('STATE'), $power);
     $input = (string)$data->Input->Input_Sel;
@@ -219,10 +222,14 @@ class YAVR extends IPSModule {
     $status = curl_getinfo($client, CURLINFO_HTTP_CODE);
     curl_close($client);
 
-    if ($status != '200') {
-      if($cmd == 'PUT') return false;
-      throw new Exception("Response invalid. Code $status");
+    if ($status == '0') {
+      $this->SetStatus(201);
+      return false;
+    } elseif ($status != '200') {
+      $this->SetStatus(202);
+      return false;
     } else {
+      $this->SetStatus(102);
       if($cmd == 'PUT') return true;
       return simplexml_load_string($result)->$zone;
     }
@@ -263,7 +270,9 @@ class YAVR extends IPSModule {
 
   public function ListScenes() {
     $result = array();
-    $data = (array)$this->Request("<Scene><Scene_Sel_Item>GetParam</Scene_Sel_Item></Scene>", 'GET')->Scene->Scene_Sel_Item;
+    $data = $this->Request("<Scene><Scene_Sel_Item>GetParam</Scene_Sel_Item></Scene>", 'GET');
+    if($data === false) return false;
+    $data = (array)$data->Scene->Scene_Sel_Item;
     foreach ($data as $id => $item) {
       $item = (array)$item;
       if ($item['RW'] == 'W') $result[str_replace('Scene ', '', $item['Param'])] = $item['Title'];
@@ -275,7 +284,9 @@ class YAVR extends IPSModule {
 
   public function ListInputs() {
     $result = array();
-    $data = (array)$this->Request("<Input><Input_Sel_Item>GetParam</Input_Sel_Item></Input>", 'GET')->Input->Input_Sel_Item;
+    $data = $this->Request("<Input><Input_Sel_Item>GetParam</Input_Sel_Item></Input>", 'GET');
+    if($data === false) return false;
+    $data = (array)$data->Input->Input_Sel_Item;
     foreach ($data as $id => $item) {
       $item = (array)$item;
       $result[$this->GetInputId($item['Param'])] = $item['Title'];
