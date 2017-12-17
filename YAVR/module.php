@@ -46,6 +46,7 @@ class YAVR extends IPSModule {
     'AirPlay' => 114,
     'JUKE' => 115,
     'MusicCast Link' => 116,
+    'TIDAL' => 117,
     'Main Zone Sync' => 200
   );
 
