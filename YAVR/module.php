@@ -48,6 +48,7 @@ class YAVR extends IPSModule {
     'MusicCast Link' => 116,
     'Qobuz' => 117,
     'TIDAL' => 118,
+    'VIDEO AUX' => 119,
     'Main Zone Sync' => 200
   );
 
