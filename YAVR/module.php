@@ -195,6 +195,10 @@ class YAVR extends IPSModule
         120 => [
             'Main Zone Sync',
             'main_sync'
+        ],
+        121 => [
+            'Deezer',
+            'deezer'
         ]
     );
 
@@ -384,6 +388,10 @@ class YAVR extends IPSModule
     {
         $host = $this->ReadPropertyString('Host');
 
+        if(!$host) {
+            return false;
+        }
+
         // check if json api is available
         if (is_null($this->json)) {
             $ch = curl_init();
@@ -405,6 +413,10 @@ class YAVR extends IPSModule
         $host = $this->ReadPropertyString('Host');
         $zone = $this->ReadPropertyString('Zone');
 
+        if(!$host) {
+            return false;
+        }
+
         $cmd = strtoupper($cmd);
         $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
         $xml .= "<YAMAHA_AV cmd=\"{$cmd}\">";
@@ -421,6 +433,7 @@ class YAVR extends IPSModule
         $result = curl_exec($client);
         $status = curl_getinfo($client, CURLINFO_HTTP_CODE);
         curl_close($client);
+
 
         if ($status == '0') {
             $this->SetStatus(201);
@@ -554,7 +567,7 @@ class YAVR extends IPSModule
         if ($this->isJson()) {
             $data = $this->RequestJSON('getFeatures', true);
             if ($data === false) return false;
-            $result = (array)$data->zone->sound_program_list;
+            $result = isset($data->zone->sound_program_list) ? (array)$data->zone->sound_program_list : [];
         } else {
             $data = $this->Request("<Scene><Scene_Sel_Item>GetParam</Scene_Sel_Item></Scene>", 'GET');
             if ($data === false) return false;
