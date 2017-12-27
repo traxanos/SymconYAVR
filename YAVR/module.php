@@ -521,7 +521,13 @@ class YAVR extends IPSModule
 
     public function SetInput($input)
     {
-        SetValueInteger($this->GetIDForIdent('INPUT'), $this->GetInputId($input));
+        $input_id = $this->GetInputId($input);
+        SetValueInteger($this->GetIDForIdent('INPUT'), $input_id);
+
+        if($this->isJson()) {
+            $inputs = $this->InputMapping[$input_id];
+            $input = end($inputs);
+        }
 
         return $this->isJson()
             ? $this->RequestJSON('setInput?input=' . ($input))
