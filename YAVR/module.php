@@ -65,12 +65,6 @@ class YAVR extends IPSModule {
     $this->EnableAction("MUTE");
     $volumeId = $this->RegisterVariableFloat("VOLUME", "Volume", "Volume.YAVR", 2);
     $this->EnableAction("VOLUME");
-    $sceneId = $this->RegisterVariableInteger("SCENE", "Szene", "YAVR.Scenes{$this->InstanceID}", 8);
-    $this->EnableAction("SCENE");
-    IPS_SetIcon($sceneId, 'HollowArrowRight');
-    $inputId = $this->RegisterVariableInteger("INPUT", "Eingang", "YAVR.Inputs{$this->InstanceID}", 9);
-    $this->EnableAction("INPUT");
-    IPS_SetIcon($inputId, 'ArrowRight');
 
     $this->RequestData();
     $this->SetTimerInterval('Update', $this->ReadPropertyInteger('UpdateInterval') * 1000);
@@ -132,8 +126,10 @@ class YAVR extends IPSModule {
     $data = $data->Basic_Status;
     $power = $data->Power_Control->Power == 'On';
     SetValueBoolean($this->GetIDForIdent('STATE'), $power);
-    $input = (string)$data->Input->Input_Sel;
-    SetValueInteger($this->GetIDForIdent('INPUT'), $this->GetInputId($input));
+    if($inputId = @$this->GetIDForIdent('INPUT')) {
+      $input = (string)$data->Input->Input_Sel;
+      SetValueInteger($inputId, $this->GetInputId($input));
+    }
     $volume = round($data->Volume->Lvl->Val / 10, 1);
     SetValueFloat($this->GetIDForIdent('VOLUME'), $volume);
     $mute = $data->Volume->Mute == 'On';
@@ -220,7 +216,13 @@ class YAVR extends IPSModule {
     }
     IPS_SetProperty($this->InstanceID, 'ScenesMapping', json_encode($result));
     IPS_ApplyChanges($this->InstanceID);
+
     $this->UpdateScenesProfile();
+
+    $sceneId = $this->RegisterVariableInteger("SCENE", "Szene", "YAVR.Scenes{$this->InstanceID}", 8);
+    $this->EnableAction("SCENE");
+    IPS_SetIcon($sceneId, 'HollowArrowRight');
+
     $resultText = "ID\tName\n";
     foreach($result as $id => $data) {
       $resultText .= "$id\t{$data}\n";
@@ -242,7 +244,13 @@ class YAVR extends IPSModule {
     }
     IPS_SetProperty($this->InstanceID, 'InputsMapping', json_encode($result));
     IPS_ApplyChanges($this->InstanceID);
+
     $this->UpdateInputsProfile();
+
+    $inputId = $this->RegisterVariableInteger("INPUT", "Eingang", "YAVR.Inputs{$this->InstanceID}", 9);
+    $this->EnableAction("INPUT");
+    IPS_SetIcon($inputId, 'ArrowRight');
+
     $resultText = "Symcon ID\tAVR ID\t\tName\n";
     foreach($result as $id => $data) {
       $resultText .= "$id\t\t{$data['id']}\t\t{$data['title']}\n";
