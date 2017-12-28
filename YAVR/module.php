@@ -1,71 +1,19 @@
 <?
 class YAVR extends IPSModule {
 
-  public $InputMapping = array(
-    'HDMI1' => 1,
-    'HDMI2' => 2,
-    'HDMI3' => 3,
-    'HDMI4' => 4,
-    'HDMI5' => 5,
-    'HDMI6' => 6,
-    'HDMI7' => 7,
-    'HDMI8' => 8,
-    'HDMI9' => 9,
-    'AV1' => 11,
-    'AV2' => 12,
-    'AV3' => 13,
-    'AV4' => 14,
-    'AV5' => 15,
-    'AV6' => 16,
-    'AV7' => 17,
-    'AV8' => 18,
-    'AV9' => 10,
-    'AUDIO' => 20,
-    'AUDIO1' => 21,
-    'AUDIO2' => 22,
-    'AUDIO3' => 23,
-    'AUDIO4' => 24,
-    'AUDIO5' => 25,
-    'AUDIO6' => 26,
-    'AUDIO7' => 27,
-    'AUDIO8' => 28,
-    'AUDIO9' => 29,
-    'Napster' => 101,
-    'NET RADIO' => 102,
-    'PC' => 103,
-    'iPod' => 104,
-    'Bluetooth' => 105,
-    'UAW' => 106,
-    'USB' => 107,
-    'iPod (USB)' => 108,
-    'TUNER' => 109,
-    'PHONO' => 110,
-    'V-AUX' => 111,
-    'Spotify' => 112,
-    'SERVER' => 113,
-    'AirPlay' => 114,
-    'JUKE' => 115,
-    'MusicCast Link' => 116,
-    'Qobuz' => 117,
-    'TIDAL' => 118,
-    'VIDEO AUX' => 119,
-    'Main Zone Sync' => 200
-  );
-
   public function Create() {
     parent::Create();
     $this->RegisterPropertyString('Host', '');
     $this->RegisterPropertyString('Zone', 'Main_Zone');
     $this->RegisterPropertyInteger('UpdateInterval', 5);
+    $this->RegisterPropertyString('InputsMapping', '');
+    $this->RegisterPropertyString('ScenesMapping', '');
 
     if (!IPS_VariableProfileExists('Volume.YAVR')) IPS_CreateVariableProfile('Volume.YAVR', 2);
     IPS_SetVariableProfileDigits('Volume.YAVR', 1);
     IPS_SetVariableProfileIcon('Volume.YAVR', 'Intensity');
     IPS_SetVariableProfileText('Volume.YAVR', '', ' dB');
     IPS_SetVariableProfileValues('Volume.YAVR', -80, 16, 0.5);
-
-    $this->UpdateScenesProfile();
-    $this->UpdateInputsProfile();
 
     $this->RegisterTimer('Update', 0, 'YAVR_RequestData($_IPS[\'TARGET\'], 0);');
 
@@ -78,18 +26,27 @@ class YAVR extends IPSModule {
     if (!IPS_VariableProfileExists("YAVR.Input{$this->InstanceID}")) IPS_DeleteVariableProfile("YAVR.Inputs{$this->InstanceID}");
   }
 
-  public function GetInputId($key) {
-    if(array_key_exists($key, $this->InputMapping)) {
-      return $this->InputMapping[$key];
+  public function GetInputId(string $value) {
+    $inputs = json_decode($this->ReadPropertyString('InputsMapping'));
+    $inputs2 = array();
+    foreach($inputs as $id => $data) {
+      $inputs2[$data->title] = $id;
+    }
+    if(array_key_exists($value, $inputs2)) {
+      return $inputs2[$value];
     } else {
       throw new Exception("Invalid input $key");
     }
   }
 
-  public function GetInputKey($id) {
-    $map = array_flip($this->InputMapping);
-    if(array_key_exists($id, $map)) {
-      return $map[$id];
+  public function GetInputKey(int $value) {
+    $inputs = json_decode($this->ReadPropertyString('InputsMapping'));
+    $inputs2 = array();
+    foreach($inputs as $id => $data) {
+      $inputs2[$id] = $data->id;
+    }
+    if(array_key_exists($id, $inputs2)) {
+      return $inputs2[$value];
     } else {
       throw new Exception("Invalid input id $id");
     }
@@ -97,8 +54,9 @@ class YAVR extends IPSModule {
 
   public function ApplyChanges() {
     parent::ApplyChanges();
-    $this->UpdateScenesProfile();
-    $this->UpdateInputsProfile();
+
+    if($this->ReadPropertyString('ScenesMapping') == '') $this->UpdateScenes();
+    if($this->ReadPropertyString('InputsMapping') == '') $this->UpdateInputs();
 
     $stateId = $this->RegisterVariableBoolean("STATE", "Zustand", "~Switch", 1);
     $this->EnableAction("STATE");
@@ -118,7 +76,8 @@ class YAVR extends IPSModule {
     $this->SetTimerInterval('Update', $this->ReadPropertyInteger('UpdateInterval') * 1000);
   }
 
-  protected function UpdateScenesProfile($scenes = array()) {
+  protected function UpdateScenesProfile() {
+    $scenes = json_decode($this->ReadPropertyString('ScenesMapping'));
     if (!IPS_VariableProfileExists("YAVR.Scenes{$this->InstanceID}")) IPS_CreateVariableProfile("YAVR.Scenes{$this->InstanceID}", 1);
     IPS_SetVariableProfileAssociation("YAVR.Scenes{$this->InstanceID}", 0, "Auswahl", '', 0x000000);
     if (count($scenes) > 0) {
@@ -128,12 +87,13 @@ class YAVR extends IPSModule {
     }
   }
 
-  protected function UpdateInputsProfile($inputs = array()) {
+  protected function UpdateInputsProfile() {
+    $inputs = json_decode($this->ReadPropertyString('InputsMapping'));
     if (!IPS_VariableProfileExists("YAVR.Inputs{$this->InstanceID}")) IPS_CreateVariableProfile("YAVR.Inputs{$this->InstanceID}", 1);
     IPS_SetVariableProfileAssociation("YAVR.Inputs{$this->InstanceID}", 0, "Auswahl", '', 0x000000);
     if (count($inputs) > 0) {
-      foreach ($inputs as $key => $name) {
-        IPS_SetVariableProfileAssociation("YAVR.Inputs{$this->InstanceID}", $key, $name, '', 0x000000);
+      foreach ($inputs as $key => $data) {
+        IPS_SetVariableProfileAssociation("YAVR.Inputs{$this->InstanceID}", $key, $data->title, '', 0x000000);
       }
     }
   }
@@ -214,27 +174,27 @@ class YAVR extends IPSModule {
     }
   }
 
-  public function GetValue($key) {
+  public function GetValue(string $key) {
     return GetValue($this->GetIDForIdent($key));
   }
 
-  public function SetState($state) {
+  public function SetState(bool $state) {
     SetValueBoolean($this->GetIDForIdent('STATE'), $state);
     $state = $state ? 'On' : 'Standby';
     return $this->Request("<Power_Control><Power>{$state}</Power></Power_Control>", 'PUT');
   }
 
-  public function SetMute($state) {
+  public function SetMute(bool $state) {
     SetValueBoolean($this->GetIDForIdent('MUTE'), $state);
     $state = $state ? 'On' : 'Off';
     return $this->Request("<Volume><Mute>{$state}</Mute></Volume>", 'PUT');
   }
 
-  public function SetScene($scene) {
+  public function SetScene(string $scene) {
     return $this->Request("<Scene><Scene_Sel>{$scene}</Scene_Sel></Scene>", 'PUT');
   }
 
-  public function SetInput($input) {
+  public function SetInput(string $input) {
     SetValueInteger($this->GetIDForIdent('INPUT'), $this->GetInputId($input));
     return $this->Request("<Input><Input_Sel>{$input}</Input_Sel></Input>", 'PUT');
   }
@@ -247,31 +207,46 @@ class YAVR extends IPSModule {
     return $this->Request("<Volume><Lvl><Val>{$volume}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Volume>", 'PUT');
   }
 
-  public function ListScenes() {
+  public function UpdateScenes() {
     $result = array();
+    $counter = 0;
     $data = $this->Request("<Scene><Scene_Sel_Item>GetParam</Scene_Sel_Item></Scene>", 'GET');
     if($data === false) return false;
     $data = (array)$data->Scene->Scene_Sel_Item;
     foreach ($data as $id => $item) {
+      $counter++;
       $item = (array)$item;
-      if ($item['RW'] == 'W') $result[str_replace('Scene ', '', $item['Param'])] = $item['Title'];
+      if ($item['RW'] == 'W') $result[str_replace('Scene ', '', $item['Param'])] = htmlspecialchars_decode((string)$item['Title']);
     }
-    $this->UpdateScenesProfile($result);
-    return $result;
+    IPS_SetProperty($this->InstanceID, 'ScenesMapping', json_encode($result));
+    IPS_ApplyChanges($this->InstanceID);
+    $this->UpdateScenesProfile();
+    $resultText = "ID\tName\n";
+    foreach($result as $id => $data) {
+      $resultText .= "$id\t{$data}\n";
+    }
+    return $resultText;
   }
 
 
-  public function ListInputs() {
+  public function UpdateInputs() {
     $result = array();
+    $counter = 0;
     $data = $this->Request("<Input><Input_Sel_Item>GetParam</Input_Sel_Item></Input>", 'GET');
     if($data === false) return false;
     $data = (array)$data->Input->Input_Sel_Item;
     foreach ($data as $id => $item) {
+      $counter++;
       $item = (array)$item;
-      $result[$this->GetInputId($item['Param'])] = $item['Title'];
+      if ($item['RW'] == 'RW') $result[$counter] = array("id" => (string)$item['Param'], "title" => (string)$item['Param']);
     }
-    $this->UpdateInputsProfile($result);
-    return $result;
+    IPS_SetProperty($this->InstanceID, 'InputsMapping', json_encode($result));
+    IPS_ApplyChanges($this->InstanceID);
+    $this->UpdateInputsProfile();
+    $resultText = "Symcon ID\tAVR ID\t\tName\n";
+    foreach($result as $id => $data) {
+      $resultText .= "$id\t\t{$data['id']}\t\t{$data['title']}\n";
+    }
+    return $resultText;
   }
 }
-?>

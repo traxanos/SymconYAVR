@@ -13,8 +13,8 @@
   "actions": [
     { "type": "Button", "label": "Einschalten", "onClick": "YAVR_SetState($id, true);" },
     { "type": "Button", "label": "Standby", "onClick": "YAVR_SetState($id, false);" },
-    { "type": "Button", "label": "Zeige Szenen", "onClick": "print_r(YAVR_ListScenes($id));" },
-    { "type": "Button", "label": "Zeige Inputs", "onClick": "print_r(YAVR_ListInputs($id));" },
+    { "type": "Button", "label": "Update Szenen", "onClick": "print_r(YAVR_UpdateScenes($id));" },
+    { "type": "Button", "label": "Update Inputs", "onClick": "print_r(YAVR_UpdateInputs($id));" },
     { "type": "Button", "label": "Status abgleichen", "onClick": "print_r(YAVR_RequestData($id));" }
   ],
   "status": [
