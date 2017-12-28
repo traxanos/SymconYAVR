@@ -54,18 +54,22 @@ class YAVR extends IPSModule {
 
   public function Create() {
     parent::Create();
-    $this->RegisterPropertyString("Host", "");
-    $this->RegisterPropertyString("Zone", "Main_Zone");
-    $this->RegisterPropertyInteger("UpdateInterval", 5);
+    $this->RegisterPropertyString('Host', '');
+    $this->RegisterPropertyString('Zone', 'Main_Zone');
+    $this->RegisterPropertyInteger('UpdateInterval', 5);
 
     if (!IPS_VariableProfileExists('Volume.YAVR')) IPS_CreateVariableProfile('Volume.YAVR', 2);
     IPS_SetVariableProfileDigits('Volume.YAVR', 1);
     IPS_SetVariableProfileIcon('Volume.YAVR', 'Intensity');
-    IPS_SetVariableProfileText('Volume.YAVR', "", " dB");
+    IPS_SetVariableProfileText('Volume.YAVR', '', ' dB');
     IPS_SetVariableProfileValues('Volume.YAVR', -80, 16, 0.5);
 
     $this->UpdateScenesProfile();
     $this->UpdateInputsProfile();
+
+    $this->RegisterTimer('Update', 0, 'YAVR_RequestData($_IPS[\'TARGET\'], 0);');
+
+    if($oldInterval = @$this->GetIDForIdent('INTERVAL')) IPS_DeleteEvent($oldInterval);
   }
 
   public function Destroy() {
@@ -111,7 +115,7 @@ class YAVR extends IPSModule {
     IPS_SetIcon($inputId, 'ArrowRight');
 
     $this->RequestData();
-    $this->RegisterTimer('INTERVAL', $this->ReadPropertyInteger('UpdateInterval'), 'YAVR_RequestData($id)');
+    $this->SetTimerInterval('Update', $this->ReadPropertyInteger('UpdateInterval') * 1000);
   }
 
   protected function UpdateScenesProfile($scenes = array()) {
@@ -159,35 +163,6 @@ class YAVR extends IPSModule {
       case 'VOLUME':
          $this->SetVolume($value);
          break;
-    }
-  }
-
-  protected function RegisterTimer($ident, $interval, $script) {
-    $id = @IPS_GetObjectIDByIdent($ident, $this->InstanceID);
-
-    if ($id && IPS_GetEvent($id)['EventType'] <> 1) {
-      IPS_DeleteEvent($id);
-      $id = 0;
-    }
-
-    if (!$id) {
-      $id = IPS_CreateEvent(1);
-      IPS_SetParent($id, $this->InstanceID);
-      IPS_SetIdent($id, $ident);
-    }
-
-    IPS_SetName($id, $ident);
-    IPS_SetHidden($id, true);
-    IPS_SetEventScript($id, "\$id = \$_IPS['TARGET'];\n$script;");
-
-    if (!IPS_EventExists($id)) throw new Exception("Ident with name $ident is used for wrong object type");
-
-    if (!($interval > 0)) {
-      IPS_SetEventCyclic($id, 0, 0, 0, 0, 1, 1);
-      IPS_SetEventActive($id, false);
-    } else {
-      IPS_SetEventCyclic($id, 0, 0, 0, 0, 1, $interval);
-      IPS_SetEventActive($id, true);
     }
   }
 
