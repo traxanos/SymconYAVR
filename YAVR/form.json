@@ -1,27 +1,88 @@
 {
-  "elements": [
-    { "name": "Host", "type": "ValidationTextBox", "caption": "Host" },
-    { "name": "Zone", "type": "Select", "caption": "Zone", "options": [
-      { "label": "Main_Zone", "value": "Main_Zone" },
-      { "label": "Zone_2", "value": "Zone_2" },
-      { "label": "Zone_3", "value": "Zone_3" },
-      { "label": "Zone_4", "value": "Zone_4" }
-    ] },
-    { "name": "UpdateInterval", "type": "IntervalBox", "caption": "Sekunden" },
+  "elements": [{
+      "name": "Host",
+      "type": "ValidationTextBox",
+      "caption": "Host"
+    },
+    {
+      "name": "Zone",
+      "type": "Select",
+      "caption": "Zone",
+      "options": [{
+          "label": "Main_Zone",
+          "value": "Main_Zone"
+        },
+        {
+          "label": "Zone_2",
+          "value": "Zone_2"
+        },
+        {
+          "label": "Zone_3",
+          "value": "Zone_3"
+        },
+        {
+          "label": "Zone_4",
+          "value": "Zone_4"
+        }
+      ]
+    },
+    {
+      "name": "UpdateInterval",
+      "type": "IntervalBox",
+      "caption": "Sekunden"
+    },
 
   ],
-  "actions": [
-    { "type": "Button", "label": "Einschalten", "onClick": "YAVR_SetState($id, true);" },
-    { "type": "Button", "label": "Standby", "onClick": "YAVR_SetState($id, false);" },
-    { "type": "Button", "label": "Szenen neu erstellen", "onClick": "print_r(YAVR_UpdateScenes($id));" },
-    { "type": "Button", "label": "Inputs neu erstellen", "onClick": "print_r(YAVR_UpdateInputs($id));" },
-    { "type": "Button", "label": "Status abgleichen", "onClick": "print_r(YAVR_RequestData($id));" }
+  "actions": [{
+      "type": "Button",
+      "label": "Einschalten",
+      "onClick": "YAVR_SetState($id, true);"
+    },
+    {
+      "type": "Button",
+      "label": "Standby",
+      "onClick": "YAVR_SetState($id, false);"
+    },
+    {
+      "type": "Button",
+      "label": "Szenen neu erstellen",
+      "onClick": "print_r(YAVR_UpdateScenes($id));"
+    },
+    {
+      "type": "Button",
+      "label": "Inputs neu erstellen",
+      "onClick": "print_r(YAVR_UpdateInputs($id));"
+    },
+    {
+      "type": "Button",
+      "label": "Status abgleichen",
+      "onClick": "print_r(YAVR_RequestData($id));"
+    }
   ],
-  "status": [
-    { "code": 101, "icon": "active", "caption": "Receiver wird erstellt." },
-    { "code": 102, "icon": "active", "caption": "Receiver is aktiv." },
-    { "code": 103, "icon": "active", "caption": "Receiver wird gelöscht." },
-    { "code": 201, "icon": "error", "caption": "Receiver ist nicht erreichbar." },
-    { "code": 202, "icon": "error", "caption": "Unbekannter Fehler ist aufgetreten." }
+  "status": [{
+      "code": 101,
+      "icon": "active",
+      "caption": "Receiver wird erstellt."
+    },
+    {
+      "code": 102,
+      "icon": "active",
+      "caption": "Receiver is aktiv."
+    },
+    {
+      "code": 103,
+      "icon": "active",
+      "caption": "Receiver wird gelöscht."
+    },
+    {
+      "code": 201,
+      "icon": "error",
+      "caption": "Receiver ist nicht erreichbar."
+    },
+    {
+      "code": 202,
+      "icon": "error",
+      "caption": "Unbekannter Fehler ist aufgetreten."
+    }
   ]
 }

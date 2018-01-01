@@ -3,7 +3,7 @@
   "name": "YAVR",
   "type": 3,
   "vendor": "Yamaha",
-  "aliases": [ "Yamaha AVR" ],
+  "aliases": ["Yamaha AVR"],
   "parentRequirements": [],
   "childRequirements": [],
   "implemented": [],
