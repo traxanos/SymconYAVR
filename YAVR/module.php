@@ -79,7 +79,7 @@ class YAVR extends IPSModule {
         $scenes = json_decode($this->ReadPropertyString('ScenesMapping'));
         if (!IPS_VariableProfileExists("YAVR.Scenes{$this->InstanceID}")) IPS_CreateVariableProfile("YAVR.Scenes{$this->InstanceID}", 1);
         IPS_SetVariableProfileAssociation("YAVR.Scenes{$this->InstanceID}", 0, "Auswahl", '', 0x000000);
-        if (count($scenes) > 0) {
+        if (@count($scenes) > 0) {
             foreach ($scenes as $key => $name) {
                 IPS_SetVariableProfileAssociation("YAVR.Scenes{$this->InstanceID}", $key, $name, '', 0x000000);
             }
@@ -90,7 +90,7 @@ class YAVR extends IPSModule {
         $inputs = json_decode($this->ReadPropertyString('InputsMapping'));
         if (!IPS_VariableProfileExists("YAVR.Inputs{$this->InstanceID}")) IPS_CreateVariableProfile("YAVR.Inputs{$this->InstanceID}", 1);
         IPS_SetVariableProfileAssociation("YAVR.Inputs{$this->InstanceID}", 0, "Auswahl", '', 0x000000);
-        if (count($inputs) > 0) {
+        if (@count($inputs) > 0) {
             foreach ($inputs as $key => $data) {
                 IPS_SetVariableProfileAssociation("YAVR.Inputs{$this->InstanceID}", $key, $data->title, '', 0x000000);
             }

@@ -7,8 +7,11 @@
       { "label": "Zone_3", "value": "Zone_3" },
       { "label": "Zone_4", "value": "Zone_4" }
     ] },
-    { "name": "UpdateInterval", "type": "IntervalBox", "caption": "Sekunden" },
-
+    {
+      "name": "UpdateInterval",
+      "type": "IntervalBox",
+      "caption": "Sekunden"
+    }
   ],
   "actions": [
     { "type": "Button", "label": "Einschalten", "onClick": "YAVR_SetState($id, true);" },
