@@ -271,7 +271,8 @@ class YAVR extends IPSModule {
         }
     }
 
-    public function GetValue(string $key) {
+    public function GetValue($key)
+    {
         return GetValue($this->GetIDForIdent($key));
     }
 
