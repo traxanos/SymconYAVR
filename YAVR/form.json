@@ -1,5 +1,7 @@
 {
-  "elements": [{
+  "elements": 
+  [
+    {
       "name": "Host",
       "type": "ValidationTextBox",
       "caption": "Host"
@@ -30,7 +32,7 @@
       "name": "UpdateInterval",
       "type": "IntervalBox",
       "caption": "Sekunden"
-    },
+    }
 
   ],
   "actions": [{
