@@ -1,5 +1,7 @@
 # SymconYAVR
 
+> **Achtung:** Das Modul wird nicht aktive von mir weiter entwickelt.
+
 SymconYAVR ist eine Erweiterung für die Heimautomatisierung IP Symcon. Mithilfe dieser Erweiterung könnt Ihr euren Yamaha A/V-Receiver steuern.
 
 ### Inhaltverzeichnis
@@ -27,7 +29,7 @@ SymconYAVR ist eine Erweiterung für die Heimautomatisierung IP Symcon. Mithilfe
 ### 3. Software-Installation
 
 Über das Modul-Control folgende URL hinzufügen.  
-`git://github.com/traxanos/SymconYAVR.git`  
+`[git://github.com/traxanos/SymconYAVR.git](https://github.com/traxanos/SymconYAVR.git)`
 
 ### 4. Einrichten der Instanzen in IP-Symcon
 
